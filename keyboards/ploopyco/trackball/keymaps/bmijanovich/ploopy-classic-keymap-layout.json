@@ -1,0 +1,206 @@
+[
+  [
+    {
+      "x": 1.5,
+      "a": 5,
+      "fa": [
+        6
+      ],
+      "w": 4.25,
+      "d": true
+    },
+    "<B>Ploopy Classic Keymap</B><BR>by mrpotatohead546"
+  ],
+  [
+    {
+      "x": 7,
+      "c": "#ffffff",
+      "t": "#000000\n\n\n\n\n\n\n\n\n\n#0000ff",
+      "p": "",
+      "a": 4,
+      "fa": [
+        6,
+        0,
+        0,
+        0,
+        0,
+        0,
+        2,
+        0,
+        0,
+        0,
+        4
+      ],
+      "w": 1.25,
+      "h": 2.5
+    },
+    "\n\n\n\n\n\n1: BTN4<BR>2: Desk &lArr;\n\nH: Raise\n\nPaste"
+  ],
+  [
+    {
+      "y": -0.75,
+      "x": 0.5,
+      "c": "#cccccc",
+      "t": "#000000",
+      "p": "",
+      "fa": [
+        4
+      ],
+      "w": 1.25,
+      "d": true
+    },
+    "<B>Layers:</B>",
+    {
+      "t": "#ff0000\n#0000ff\n\n\n#00aa00\n\n#000000",
+      "a": 0,
+      "fa": [
+        4,
+        4,
+        0,
+        0,
+        0,
+        0,
+        4
+      ],
+      "h": 1.25,
+      "d": true
+    },
+    "Raise\nLower\n\n\nSystem\n\nBase"
+  ],
+  [
+    {
+      "y": -0.75,
+      "x": 4.25,
+      "c": "#474747",
+      "t": "#ff0000\n\n\n\n\n\n#ffffff",
+      "p": "",
+      "a": 5,
+      "fa": [
+        9,
+        4,
+        0,
+        0,
+        0,
+        0,
+        9
+      ],
+      "w": 2.5,
+      "h": 2.5
+    },
+    "&varr;&harr;\n\n\n\n\n\n<i class='fa fa-mouse-pointer'></i>",
+    {
+      "x": 1.5,
+      "c": "#ffffff",
+      "t": "#000000\n\n\n\n\n\n\n\n#ff0000",
+      "p": "",
+      "a": 4,
+      "fa": [
+        9,
+        4,
+        0,
+        0,
+        0,
+        0,
+        2,
+        0,
+        2
+      ],
+      "w": 1.25,
+      "h": 2.5
+    },
+    "\n\n\n\n\n\n1: BTN5<BR>2: Desk &rArr;\n\nH: System\n\nH: Lower"
+  ],
+  [
+    {
+      "ry": 3.25,
+      "y": 1,
+      "x": 5,
+      "c": "#cccccc",
+      "t": "#000000",
+      "p": "",
+      "fa": [
+        4
+      ],
+      "w": 4,
+      "h": 1.5,
+      "d": true
+    },
+    "<B>DPI Adjustment</B><BR><BR>Roll your thumb downward across right click and the scroll wheel to toggle high / low DPI"
+  ],
+  [
+    {
+      "y": 0.75,
+      "x": 5,
+      "w": 3.25,
+      "h": 1.5,
+      "d": true
+    },
+    "<B>Scroll Wheel Functions</B><BR><BR>SD = Show Desktop<BR>SW = Show Windows<BR>SS = Screenshot"
+  ],
+  [
+    {
+      "r": -30,
+      "ry": 5,
+      "y": -0.25,
+      "c": "#ffffff",
+      "t": "#ff0000\n#0000ff\n\n\n#00aa00\n\n#000000",
+      "p": "",
+      "a": 5,
+      "fa": [
+        4,
+        4,
+        0,
+        0,
+        0,
+        0,
+        4
+      ],
+      "w": 2,
+      "h": 2.75
+    },
+    "Drag Lock<BR>(Holds BTN1)\nBTN3\n\n\nReset\n\nBTN1",
+    {
+      "x": 0.75,
+      "fa": [
+        4,
+        4
+      ],
+      "w": 1.25,
+      "h": 2.75
+    },
+    "Cut\nCopy\n\n\nMac / Win\n\n1: BTN2<BR>2: Enter"
+  ],
+  [
+    {
+      "y": -0.75,
+      "x": 2,
+      "t": "#ff0000\n#000000",
+      "p": "",
+      "fa": [
+        7,
+        7
+      ],
+      "w": 0.75
+    },
+    "&harr;\n&varr;"
+  ],
+  [
+    {
+      "x": 2,
+      "t": "#ff0000\n#0000ff\n\n\n#00aa00\n\n#000000",
+      "p": "",
+      "fa": [
+        4,
+        4,
+        0,
+        0,
+        0,
+        0,
+        4
+      ],
+      "w": 0.75,
+      "h": 1.5
+    },
+    "SD\nSS\n\n\nBoot\n\nSW"
+  ]
+]
