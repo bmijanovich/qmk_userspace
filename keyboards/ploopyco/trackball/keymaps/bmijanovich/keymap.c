@@ -1,11 +1,9 @@
-/* TODO
-  * Figure out what to do about new Chrome window shortcut - get rid of it or implement Windows mode?
-  * Backport Adept semaphore drag scrolling code
-  * Check and update comments
-  * Write a readme
-*/
-
 #include QMK_KEYBOARD_H
+
+// Per-button TAPPING_TERM relative to thumb/finger strength
+#define BTN2_TAPPING_TERM TAPPING_TERM
+#define BTN4_TAPPING_TERM TAPPING_TERM + 75
+#define BTN5_TAPPING_TERM TAPPING_TERM + 75
 
 // CKC = Custom key code
 // Mac utility function keycodes
@@ -33,8 +31,8 @@ enum {
     _BASE,
     _DRAG_LOCK,
     _DPI_CONTROL,
-    _BTN4_FUNCTIONS,
-    _BTN5_FUNCTIONS,
+    _RAISE,
+    _LOWER,
     _SYSTEM,
 };
 
@@ -53,9 +51,9 @@ enum {
 
 // Tap Dance keycodes
 enum {
-    TD_BTN2,  // 1: KC_BTN2; 2: KC_ENT; 3: New Chrome window; Hold: _DPI_CONTROL
-    TD_BTN4,  // 1: KC_BTN4; 2: Desktop left; Hold: _BTN4_FUNCTIONS + DRAG_SCROLL + horizontal wheel scroll
-    TD_BTN5,  // 1: KC_BTN5; 2: Desktop right; Hold: _BTN5_FUNCTIONS
+    TD_BTN2,  // 1: KC_BTN2; 2: KC_ENT; Hold: _DPI_CONTROL
+    TD_BTN4,  // 1: KC_BTN4; 2: Desktop left; Hold: _RAISE + DRAG_SCROLL + horizontal wheel scroll
+    TD_BTN5,  // 1: KC_BTN5; 2: Desktop right; Hold: _LOWER
 };
 
 // Keymap
@@ -76,12 +74,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         XXXXXXX, XXXXXXX
     ),
     // Drag scroll, horizontal scroll with wheel, drag lock and utility functions
-    [_BTN4_FUNCTIONS] = LAYOUT(
+    [_RAISE] = LAYOUT(
         CKC_DRAG_LOCK_ON, CKC_SHOW_DESKTOP, CKC_CUT,
         _______, MO(_SYSTEM)
     ),
     // Utility functions
-    [_BTN5_FUNCTIONS] = LAYOUT(
+    [_LOWER] = LAYOUT(
         KC_BTN3, CKC_SCREENSHOT, CKC_COPY,
         CKC_PASTE, _______
     ),
@@ -101,7 +99,6 @@ typedef enum {
     TD_UNKNOWN,
     TD_SINGLE_TAP,
     TD_DOUBLE_TAP,
-    TD_TRIPLE_TAP,
     TD_SINGLE_HOLD,
 } td_action_t;
 
@@ -213,21 +210,23 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
 }
 
-// Use a longer TAPPING_TERM for slower ring and pinky fingers
+// Adjust Tap Dance TAPPING_TERM
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
+        case TD(TD_BTN2):
+            return BTN2_TAPPING_TERM;
         case TD(TD_BTN4):
-            return TAPPING_TERM + 50;
+            return BTN4_TAPPING_TERM;
         case TD(TD_BTN5):
-            return TAPPING_TERM + 50;
+            return BTN5_TAPPING_TERM;
         default:
             return TAPPING_TERM;
     }
 }
 
-// Horizonal scroll with wheel on _BTN4_FUNCTIONS layer
+// Horizonal scroll with wheel on _RAISE layer
 bool encoder_update_user(uint8_t index, bool clockwise) {
-    if (IS_LAYER_ON(_BTN4_FUNCTIONS)) {
+    if (IS_LAYER_ON(_RAISE)) {
         tap_code(clockwise ? KC_WH_L : KC_WH_R);
         return false;
     } else {
@@ -239,19 +238,18 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
 
 /* Tap Dance callback functions */
 
-// Suports single/double/triple taps and single hold; favors instant hold when interrupted
+// Suports single/double taps and single hold; favors instant hold when interrupted
 static td_action_t get_tap_dance_action(tap_dance_state_t *state) {
     if (state->count == 1) return (state->pressed) ? TD_SINGLE_HOLD : TD_SINGLE_TAP;
     else if (state->count == 2) return TD_DOUBLE_TAP;
-    else if (state->count == 3) return TD_TRIPLE_TAP;
     else return TD_UNKNOWN;
 }
 
 // Mouse button 2 Tap Dance on-each-tap callback
 static void btn2_td_tap(tap_dance_state_t *state, void *user_data) {
     btn2_td_action = get_tap_dance_action(state);
-    if (btn2_td_action == TD_TRIPLE_TAP) {
-        SEND_STRING(SS_LGUI(" ") SS_DELAY(200) "chrome" SS_DELAY(200) SS_TAP(X_ENT) SS_DELAY(200) SS_LGUI("n"));
+    if (btn2_td_action == TD_DOUBLE_TAP) {
+        register_code(KC_ENT);
         state->finished = true;
     }
 }
@@ -262,9 +260,6 @@ static void btn2_td_finished(tap_dance_state_t *state, void *user_data) {
     switch (btn2_td_action) {
         case TD_SINGLE_TAP:
             tap_code16(KC_BTN2);
-            break;
-        case TD_DOUBLE_TAP:
-            register_code(KC_ENT);
             break;
         case TD_SINGLE_HOLD:
             layer_on(_DPI_CONTROL);
@@ -306,7 +301,7 @@ static void btn4_td_finished(tap_dance_state_t *state, void *user_data) {
             tap_code16(KC_BTN4);
             break;
         case TD_SINGLE_HOLD:
-            layer_on(_BTN4_FUNCTIONS);
+            layer_on(_RAISE);
             register_custom_keycode(DRAG_SCROLL, 3, 0);
             break;
         default:
@@ -321,7 +316,7 @@ static void btn4_td_reset(tap_dance_state_t *state, void *user_data) {
             unregister_code16(mac ? CKC_MAC_DL : CKC_WIN_DL);
             break;
         case TD_SINGLE_HOLD:
-            layer_off(_BTN4_FUNCTIONS);
+            layer_off(_RAISE);
             unregister_custom_keycode(DRAG_SCROLL, 3, 0);
             break;
         default:
@@ -347,7 +342,7 @@ static void btn5_td_finished(tap_dance_state_t *state, void *user_data) {
             tap_code16(KC_BTN5);
             break;
         case TD_SINGLE_HOLD:
-            layer_on(_BTN5_FUNCTIONS);
+            layer_on(_LOWER);
             break;
         default:
             break;
@@ -361,7 +356,7 @@ static void btn5_td_reset(tap_dance_state_t *state, void *user_data) {
             unregister_code16(mac ? CKC_MAC_DR : CKC_WIN_DR);
             break;
         case TD_SINGLE_HOLD:
-            layer_off(_BTN5_FUNCTIONS);
+            layer_off(_LOWER);
             break;
         default:
             break;
